@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: deployment-bdd
+  labels:
+    estado: "1"
+spec:
+  selector:
+    matchLabels:
+      app: dbluis
+      tier: data
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: dbluis
+        tier: data
+    spec:
+      containers:
+      - name: database
+        image: 17240609/base:latest
+        env:
+        - name: MYSQL_ROOT_PASSWORD
+          value: MYSQL_PASSWORD
+        - name: MYSQL_DATABASE
+          value: gym
+        - name: MYSQL_USER
+          value: root
+        - name: MYSQL_PASSWORD
+          value: 
+
+        ports:
+        - containerPort: 3306
+        volumeMounts:
+        - name: mysql-persistent-storage
+          mountPath: /var/lib/mysql
+      volumes:
+        - name: mysql-persistent-storage
+          persistentVolumeClaim:
+            claimName: pv-claim
